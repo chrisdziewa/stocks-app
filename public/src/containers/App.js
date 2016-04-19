@@ -11,8 +11,20 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <p>I am the app component</p>
-        {this.props.loadedMessage}
+        <h1 className="logo">hiStocks</h1>
+        <div className="graph">
+          This will be the stock history graph
+        </div>
+        <form>
+          <input type="text" placeholder="Stock code"/>
+          <button type="submit" className="btn-add">
+            Add
+          </button>
+        </form>
+
+        <div className="stock-card">
+          <p>GOOG</p>
+        </div>
       </div>
     );
   }
