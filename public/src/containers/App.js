@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getLoadedMessage } from '../actions';
+import { getLoadedMessage, getStockData } from '../actions';
 
 class App extends Component {
   componentWillMount() {
     this.props.getLoadedMessage();
+    this.props.getStockData();
   }
 
   render() {
@@ -43,4 +44,4 @@ const mapStateToProps = (state) => {
 //   }
 // }
 
-export default connect(mapStateToProps, { getLoadedMessage })(App);
+export default connect(mapStateToProps, { getLoadedMessage, getStockData })(App);
