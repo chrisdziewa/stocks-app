@@ -7,16 +7,44 @@ const api_key = config.quandl.api_key;
 // Sample quandl request
 //https://www.quandl.com/api/v3/datasets/WIKI/AAPL.json?start_date=2015-04-24&end_date=2016-04-25&order=asc&api_key=API_KEY_HERE
 
-let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/AAPL.json?start_date=2015-04-24&end_date=2016-04-25&order=asc&api_key=${api_key}`
+let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
 
-export function getStockData() {
+export function getStockData(symbol) {
+  let fullApi = `${quandlApi}${symbol}.json?start_date=2015-04-25&end_date=2016-04-26&order=asc&api_key=${api_key}`;
   return (dispatch) => {
-    axios.get(quandlApi).then(response => {
+    axios.get(fullApi).then(response => {
       console.log(response);
     })
     .catch(err => {
-      console.log('There was an error');
+      console.log(`Could not find stock with symbol: ${symbol || undefined}`);
     })
+  }
+}
+
+export function addStock(symbol) {
+  let fullApi = `${quandlApi}${symbol}.json?start_date=2015-04-25&end_date=2016-04-26&order=asc&api_key=${api_key}`;
+  return (dispatch) => {
+    axios.get(fullApi).then(response => {
+      // Date is index 0, Closing price is index 4 in data array
+      let { dataset_code, name, data } = response.data.dataset;
+      let stockData = {
+        symbol: dataset_code,
+        fullName: name,
+        data
+      }
+      console.log('addStock succeeded in actions with symbol: ', symbol);
+      dispatch(stockAdded(stockData));
+    })
+    .catch(err => {
+      console.log(`Could not add stock with symbol: ${symbol || undefined}`);
+    })
+  }
+}
+
+function stockAdded(data) {
+  return {
+    type: constants.ADD_STOCK,
+    payload: data
   }
 }
 

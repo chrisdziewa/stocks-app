@@ -1,12 +1,31 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getLoadedMessage, getStockData } from '../actions';
+import { getStockData, addStock } from '../actions';
+
+import StockInput from '../components/StockInput';
+import StockCard from '../components/StockCard';
 
 class App extends Component {
   componentWillMount() {
-    this.props.getLoadedMessage();
-    this.props.getStockData();
+    this.props.getStockData('AAPL');
+  }
+
+  renderStockCards() {
+    if (this.props.stockData && this.props.stockData.length < 1) {
+      return null;
+    }
+    let stockCards = this.props.stockData.map(stock => {
+      return (
+        <StockCard
+          key={stock.symbol}
+          symbol={stock.symbol}
+          fullName={stock.fullName}
+        />
+      )
+    });
+
+    return stockCards;
   }
 
   render() {
@@ -16,15 +35,12 @@ class App extends Component {
         <div className="graph">
           This will be the stock history graph
         </div>
-        <form>
-          <input type="text" placeholder="Stock code"/>
-          <button type="submit" className="btn-add">
-            Add
-          </button>
-        </form>
-
-        <div className="stock-card">
-          <p>GOOG</p>
+        <StockInput
+          addStock={this.props.addStock.bind(this)}
+          currentSymbols={this.props.symbolList}
+        />
+        <div className="current-stocks">
+          {this.renderStockCards()}
         </div>
       </div>
     );
@@ -34,7 +50,8 @@ class App extends Component {
 // Connect State and Dispatch to props for container element
 const mapStateToProps = (state) => {
   return {
-    loadedMessage: state.main.message
+    symbolList: state.stocks.symbolList,
+    stockData: state.stocks.data
   }
 }
 
@@ -44,4 +61,4 @@ const mapStateToProps = (state) => {
 //   }
 // }
 
-export default connect(mapStateToProps, { getLoadedMessage, getStockData })(App);
+export default connect(mapStateToProps, { getStockData, addStock })(App);
