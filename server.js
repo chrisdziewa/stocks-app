@@ -48,7 +48,7 @@ if (isDevMode) {
 
 
 // Mount routes here
-
+app.use('/api/stocks', routes.stocks);
 
 app.listen(PORT, () => {
   console.log('App listening on port ' + PORT);

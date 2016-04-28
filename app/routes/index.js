@@ -1,5 +1,6 @@
 /* Use this file to export all routes */
 'use strict';
+const stocks = require('./stocks.js');
 
 const router = require('express').Router();
 
@@ -8,5 +9,6 @@ router.get('/', (req, res, next) => {
 });
 
 module.exports = {
-  main: router
+  main: router,
+  stocks
 }

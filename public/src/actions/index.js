@@ -3,6 +3,7 @@ import axios from 'axios';
 import config from '../../../app/config';
 
 const api_key = config.quandl.api_key;
+const dbAPI = '/api/stocks/';
 
 // Sample quandl request
 //https://www.quandl.com/api/v3/datasets/WIKI/AAPL.json?start_date=2015-04-24&end_date=2016-04-25&order=asc&api_key=API_KEY_HERE
@@ -32,6 +33,12 @@ export function addStock(symbol) {
         fullName: name,
         data
       }
+      axios.put(dbAPI, {symbol: symbol}).then(response => {
+        console.log('Got response from add route')
+      })
+      .catch(e => {
+        console.log('Could not add symbol to DB');
+      });
       console.log('addStock succeeded in actions with symbol: ', symbol);
       dispatch(stockAdded(stockData));
     })

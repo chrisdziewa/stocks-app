@@ -1,6 +1,6 @@
 'use strict';
 const config = require('../config');
-const User = require('../models/user');
+const Stock = require('../models/stock');
 const mongoose = require('mongoose');
 
 // Connect to MongoDB
@@ -13,9 +13,9 @@ mongoose.connect(config.dbURI, (err, db) => {
 });
 
 // Turn schemas into a usable models
-let userModel = mongoose.model('User', User);
+let stockModel = mongoose.model('Stock', Stock);
 
 module.exports = {
   mongoose,
-  userModel
+  stockModel
 }
