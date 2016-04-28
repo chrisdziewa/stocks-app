@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getStockData, addStock } from '../actions';
+import { getStockData, addStock, getSavedStockSymbols } from '../actions';
 
 import StockInput from '../components/StockInput';
 import StockCard from '../components/StockCard';
 
 class App extends Component {
   componentWillMount() {
-    this.props.getStockData('AAPL');
+    this.props.getSavedStockSymbols();
   }
 
   renderStockCards() {
@@ -61,4 +61,4 @@ const mapStateToProps = (state) => {
 //   }
 // }
 
-export default connect(mapStateToProps, { getStockData, addStock })(App);
+export default connect(mapStateToProps, { getStockData, addStock, getSavedStockSymbols })(App);

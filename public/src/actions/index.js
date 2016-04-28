@@ -10,15 +10,49 @@ const dbAPI = '/api/stocks/';
 
 let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
 
+export function getSavedStockSymbols() {
+  return (dispatch) => {
+    axios.get(dbAPI).then(response => {
+      dispatch(getSavedStocks(response.data));
+      response.data.forEach(stock => {
+        dispatch(getStockData(stock.symbol));
+      })
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+}
+
+function getSavedStocks(symbolList) {
+  return {
+    type: constants.GET_SAVED_STOCKS,
+    payload: symbolList
+  }
+}
+
 export function getStockData(symbol) {
   let fullApi = `${quandlApi}${symbol}.json?start_date=2015-04-25&end_date=2016-04-26&order=asc&api_key=${api_key}`;
   return (dispatch) => {
     axios.get(fullApi).then(response => {
-      console.log(response);
+      let { dataset_code, name, data } = response.data.dataset;
+      let stockData = {
+        symbol: dataset_code,
+        fullName: name,
+        data
+      }
+      dispatch(getSingleStock(stockData));
     })
     .catch(err => {
       console.log(`Could not find stock with symbol: ${symbol || undefined}`);
     })
+  }
+}
+
+function getSingleStock(data) {
+  return {
+    type: constants.GET_SINGLE_STOCK,
+    payload: data
   }
 }
 
@@ -34,17 +68,16 @@ export function addStock(symbol) {
         data
       }
       axios.put(dbAPI, {symbol: symbol}).then(response => {
-        console.log('Got response from add route')
+        // Symbol added to db
+        dispatch(stockAdded(stockData));
       })
       .catch(e => {
         console.log('Could not add symbol to DB');
       });
-      console.log('addStock succeeded in actions with symbol: ', symbol);
-      dispatch(stockAdded(stockData));
     })
     .catch(err => {
       console.log(`Could not add stock with symbol: ${symbol || undefined}`);
-    })
+    });
   }
 }
 
