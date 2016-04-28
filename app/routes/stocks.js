@@ -15,4 +15,15 @@ stockRouter.put('/', (req, res, next) => {
   });
 });
 
+stockRouter.get('/', (req, res, next) => {
+  console.log('Called get all stock symbols');
+  db.stockModel.find({}, (err, symbols) => {
+    if (err) {
+      return res.status(500).send('Could not get stock symbols');
+    } else {
+      return res.json(symbols);
+    }
+  });
+});
+
 module.exports = stockRouter;
