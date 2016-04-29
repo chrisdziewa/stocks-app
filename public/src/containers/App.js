@@ -5,6 +5,7 @@ import { getStockData, addStock, getSavedStockSymbols } from '../actions';
 
 import StockInput from '../components/StockInput';
 import StockCard from '../components/StockCard';
+import Graph from '../components/Graph';
 
 class App extends Component {
   componentWillMount() {
@@ -32,9 +33,9 @@ class App extends Component {
     return (
       <div className="app">
         <h1 className="logo">hiStocks</h1>
-        <div className="graph">
-          This will be the stock history graph
+        <div className="graph-container">
         </div>
+        <Graph />
         <StockInput
           addStock={this.props.addStock.bind(this)}
           currentSymbols={this.props.symbolList}
