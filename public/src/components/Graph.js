@@ -11,6 +11,9 @@ class Graph extends Component {
 
   render() {
     let config = {
+        title: {
+            text: 'Closing Stock Prices'
+        },
         series: [{
         data: [1, 3, 2, 4]
       }]
