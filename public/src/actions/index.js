@@ -36,10 +36,17 @@ export function getStockData(symbol) {
   return (dispatch) => {
     axios.get(fullApi).then(response => {
       let { dataset_code, name, data } = response.data.dataset;
+
+      // Return data as pairs of unix timestamp and closing price for the day
+      let formattedData = data.map((dayInfo) => {
+        let formattedDate = new Date(dayInfo[0]).getTime();
+        return [formattedDate, dayInfo[4]];
+      });
+
       let stockData = {
         symbol: dataset_code,
         fullName: name,
-        data
+        data: formattedData
       }
       dispatch(getSingleStock(stockData));
     })

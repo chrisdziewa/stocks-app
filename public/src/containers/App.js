@@ -35,7 +35,11 @@ class App extends Component {
         <h1 className="logo">hiStocks</h1>
         <div className="graph-container">
         </div>
-        <Graph />
+        {
+          this.props.stockData && this.props.stockData.length > 0 && this.props.stockData.length === this.props.symbolList.length ?
+            <Graph stockData={this.props.stockData}/>
+          : null
+        }
         <StockInput
           addStock={this.props.addStock.bind(this)}
           currentSymbols={this.props.symbolList}
