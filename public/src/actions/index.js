@@ -1,3 +1,4 @@
+// TODO: Fix date format for startDate in getDates function 
 import * as constants from '../constants';
 import axios from 'axios';
 import config from '../../../app/config';
@@ -9,6 +10,18 @@ const dbAPI = '/api/stocks/';
 //https://www.quandl.com/api/v3/datasets/WIKI/AAPL.json?start_date=2015-04-24&end_date=2016-04-25&order=asc&api_key=API_KEY_HERE
 
 let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
+
+
+// Formats start and end dates for Quandl api
+function getDates() {
+  let currentDate = new Date(Date.now());
+  let formattedEndDate = `${currentDate.getFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
+
+  let tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+  let startYear = tomorrow.getFullYear() - 1;
+  let formattedStartDate = `${startYear}-${tomorrow.getUTCMonth() + 1}-${tomorrow.getUTCDate() - 1}`;
+  return [formattedStartDate, formattedEndDate];
+}
 
 export function getSavedStockSymbols() {
   return (dispatch) => {
@@ -32,7 +45,9 @@ function getSavedStocks(symbolList) {
 }
 
 export function getStockData(symbol) {
-  let fullApi = `${quandlApi}${symbol}.json?start_date=2015-04-25&end_date=2016-04-26&order=asc&api_key=${api_key}`;
+  let [ startDate, endDate ] = getDates();
+
+  let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
   return (dispatch) => {
     axios.get(fullApi).then(response => {
       let { dataset_code, name, data } = response.data.dataset;
@@ -64,7 +79,9 @@ function getSingleStock(data) {
 }
 
 export function addStock(symbol) {
-  let fullApi = `${quandlApi}${symbol}.json?start_date=2015-04-25&end_date=2016-04-26&order=asc&api_key=${api_key}`;
+  let [ startDate, endDate ] = getDates();
+
+  let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
   return (dispatch) => {
     axios.get(fullApi).then(response => {
       // Date is index 0, Closing price is index 4 in data array

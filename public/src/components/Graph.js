@@ -17,7 +17,7 @@ class Graph extends Component {
         name: stock.symbol,
         data: stock.data,
         tooltip: {
-          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
           valueDecimals: 2
         }
       }
