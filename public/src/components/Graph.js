@@ -7,7 +7,7 @@ class Graph extends Component {
 
   componentDidMount() {
     if (!this.props.stockData || this.props.stockData.length < 1) {
-      console.log('it was null')
+      console.log('it was null');
       return null;
     }
 
