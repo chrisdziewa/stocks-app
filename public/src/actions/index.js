@@ -14,12 +14,11 @@ let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
 
 // Formats start and end dates for Quandl api
 function getDates() {
-  let currentDate = new Date(Date.now());
-  let formattedEndDate = `${currentDate.getFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
+  let currentDate = new Date();
+  let formattedEndDate = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
 
-  let tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-  let startYear = tomorrow.getFullYear() - 1;
-  let formattedStartDate = `${startYear}-${tomorrow.getUTCMonth() + 1}-${tomorrow.getUTCDate() - 1}`;
+  let startDate = new Date(currentDate.setUTCFullYear(currentDate.getUTCFullYear() - 1));
+  let formattedStartDate = `${startDate.getUTCFullYear()}-${startDate.getUTCMonth() + 1}-${startDate.getUTCDate()}`;
   return [formattedStartDate, formattedEndDate];
 }
 
