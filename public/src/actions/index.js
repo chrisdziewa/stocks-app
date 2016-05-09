@@ -1,4 +1,4 @@
-// TODO: Fix date format for startDate in getDates function 
+// TODO: Fix date format for startDate in getDates function
 import * as constants from '../constants';
 import axios from 'axios';
 import config from '../../../app/config';
@@ -21,6 +21,16 @@ function getDates() {
   let startYear = tomorrow.getFullYear() - 1;
   let formattedStartDate = `${startYear}-${tomorrow.getUTCMonth() + 1}-${tomorrow.getUTCDate() - 1}`;
   return [formattedStartDate, formattedEndDate];
+}
+
+// Return data as pairs of unix timestamp and closing price for the day
+function formatStockData(data) {
+  let formattedData = data.map((dayInfo) => {
+    let formattedDate = new Date(dayInfo[0]).getTime();
+    return [formattedDate, dayInfo[4]];
+  });
+
+  return formattedData;
 }
 
 export function getSavedStockSymbols() {
@@ -52,11 +62,7 @@ export function getStockData(symbol) {
     axios.get(fullApi).then(response => {
       let { dataset_code, name, data } = response.data.dataset;
 
-      // Return data as pairs of unix timestamp and closing price for the day
-      let formattedData = data.map((dayInfo) => {
-        let formattedDate = new Date(dayInfo[0]).getTime();
-        return [formattedDate, dayInfo[4]];
-      });
+      let formattedData = formatStockData(data);
 
       let stockData = {
         symbol: dataset_code,
@@ -86,10 +92,14 @@ export function addStock(symbol) {
     axios.get(fullApi).then(response => {
       // Date is index 0, Closing price is index 4 in data array
       let { dataset_code, name, data } = response.data.dataset;
+
+      let formattedData = formatStockData(data);
+
+
       let stockData = {
         symbol: dataset_code,
         fullName: name,
-        data
+        data: formattedData
       }
       axios.put(dbAPI, {symbol: symbol}).then(response => {
         // Symbol added to db
