@@ -16,12 +16,28 @@ stockRouter.put('/', (req, res, next) => {
 });
 
 stockRouter.get('/', (req, res, next) => {
-  console.log('Called get all stock symbols');
   db.stockModel.find({}, (err, symbols) => {
     if (err) {
       return res.status(500).send('Could not get stock symbols');
     } else {
       return res.json(symbols);
+    }
+  });
+});
+
+stockRouter.delete('/:symbol', (req, res, next) => {
+  let symbol = req.params.symbol;
+  db.stockModel.remove({
+    symbol: symbol
+  }, (err, response) => {
+    if (err) {
+      return res.send(err);
+    } else {
+      if (response.result.n > 0) {
+        return res.send('Symbol ' + symbol + ' has been deleted');
+      } else {
+        return res.status(404).send('Symbol doesn\'t exist');
+      }
     }
   });
 });
