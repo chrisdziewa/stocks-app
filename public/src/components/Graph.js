@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-// import Highcharts from 'highcharts';
 import ReactHighcharts from 'react-highcharts';
+import { connect } from 'react-redux';
+
 let Highcharts = require('highcharts/highstock');
 
 class Graph extends Component {
@@ -11,26 +12,73 @@ class Graph extends Component {
     };
   }
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  componentDidMount() {
+    if (!this.props.stockData || this.props.stockData.length < 1) {
+      console.log('it was null');
+      return null;
+    }
+
+    let config = this.buildChartConfig();
+
+    let graph = Highcharts.StockChart('graph', config);
+    this.setState({
+      chart: graph
+    });
+  }
+
   componentWillReceiveProps(newProps) {
     if (newProps !== this.props) {
-      this.props = newProps;
-      this.updateChart();
+      let [symbol, event] = newProps.event;
+      if (event === 'add') {
+        this.addToSeries(symbol);
+      } else if (event === 'delete') {
+        this.removeFromSeries(symbol);
+      }
     }
   }
 
-  updateChart() {
+  addToSeries(symbol) {
     let { stockData } = this.props;
-    this.state.chart.addSeries(this.formatSingleSeries(stockData[stockData.length - 1]), true, true);
+    let { chart } = this.state;
+    let isNew = true;
+    chart.series.forEach((series, index) => {
+      if (series.name === symbol) {
+        isNew = false;
+      }
+      
+    });
+    if (isNew) {
+      chart.addSeries(this.formatSingleSeries(stockData[stockData.length - 1]), true, true);
+    }
+  }
+
+  removeFromSeries(symbol) {
+    let { chart } = this.state;
+    let indexToDelete = 1;
+    chart.series.forEach((series, index) => {
+      if (series.name === symbol) {
+        indexToDelete = index;
+        console.log('index: ', indexToDelete);
+      }
+    });
+
+    if (indexToDelete) {
+      console.log(indexToDelete);
+      if (indexToDelete > 0) {
+        indexToDelete--;
+      }
+      chart.series[indexToDelete].remove(false);
+    }
   }
 
   formatSingleSeries(stock) {
     return {
       name: stock.symbol,
-      data: stock.data,
-      tooltip: {
-        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
-        valueDecimals: 2
-      }
+      data: stock.data
     }
   }
 
@@ -73,20 +121,6 @@ class Graph extends Component {
 
   }
 
-  componentDidMount() {
-    if (!this.props.stockData || this.props.stockData.length < 1) {
-      console.log('it was null');
-      return null;
-    }
-
-    let config = this.buildChartConfig();
-
-    let graph = Highcharts.StockChart('graph', config);
-    this.setState({
-      chart: graph
-    });
-  }
-
   componentWillUnMount() {
     this.setState({
       chart: ''
@@ -94,7 +128,6 @@ class Graph extends Component {
   }
 
   render() {
-    console.log(this.state.chart);
         // ... more options - see http://api.highcharts.com/highcharts
     return (
       <div id="graph"></div>
@@ -102,4 +135,10 @@ class Graph extends Component {
   }
 }
 
-export default Graph;
+const mapStateToProps = (state) => {
+  return {
+    event: state.stocks.event
+  }
+}
+
+export default connect(mapStateToProps, null)(Graph);
