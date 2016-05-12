@@ -7,9 +7,8 @@ let Highcharts = require('highcharts/highstock');
 class Graph extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      chart: ''
-    };
+
+    this.chart = null;
   }
 
   shouldComponentUpdate() {
@@ -25,9 +24,7 @@ class Graph extends Component {
     let config = this.buildChartConfig();
 
     let graph = Highcharts.StockChart('graph', config);
-    this.setState({
-      chart: graph
-    });
+    this.chart = graph;
   }
 
   componentWillReceiveProps(newProps) {
@@ -43,36 +40,29 @@ class Graph extends Component {
 
   addToSeries(symbol) {
     let { stockData } = this.props;
-    let { chart } = this.state;
+    let { chart } = this;
     let isNew = true;
-    chart.series.forEach((series, index) => {
+    this.chart.series.forEach((series, index) => {
       if (series.name === symbol) {
         isNew = false;
       }
-      
+
     });
     if (isNew) {
-      chart.addSeries(this.formatSingleSeries(stockData[stockData.length - 1]), true, true);
+      this.chart.addSeries(this.formatSingleSeries(stockData[stockData.length - 1]), true, true);
     }
   }
 
   removeFromSeries(symbol) {
-    let { chart } = this.state;
-    let indexToDelete = 1;
-    chart.series.forEach((series, index) => {
+    let { chart } = this;
+
+    chart.series.forEach(series => {
       if (series.name === symbol) {
-        indexToDelete = index;
-        console.log('index: ', indexToDelete);
+        series.remove(false);
       }
     });
 
-    if (indexToDelete) {
-      console.log(indexToDelete);
-      if (indexToDelete > 0) {
-        indexToDelete--;
-      }
-      chart.series[indexToDelete].remove(false);
-    }
+    this.chart.redraw();
   }
 
   formatSingleSeries(stock) {
@@ -101,6 +91,10 @@ class Graph extends Component {
     let series = this.initializeSeries();
 
     let config = {
+      navigator : {
+        adaptToUpdatedData: true,
+        baseSeries: 0
+      },
       rangeSelector: {
         selected: 1
       },
@@ -122,9 +116,6 @@ class Graph extends Component {
   }
 
   componentWillUnMount() {
-    this.setState({
-      chart: ''
-    });
   }
 
   render() {

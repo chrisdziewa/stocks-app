@@ -1,11 +1,13 @@
 import {
   ADD_STOCK,
   GET_SAVED_STOCKS,
-  GET_SINGLE_STOCK
+  GET_SINGLE_STOCK,
+  DELETE_STOCK,
+  RESET_EVENT
 } from '../constants/index';
 
 
-const INITIAL_STATE = { data: [], symbolList: [] };
+const INITIAL_STATE = { data: [], symbolList: [], event: [null, null] };
 
 export default function(state = INITIAL_STATE, action) {
   switch(action.type) {
@@ -27,7 +29,19 @@ export default function(state = INITIAL_STATE, action) {
       } else {
         return state;
       }
-      return Object.assign({}, state, {data: newData}, {symbolList: symbols});
+      return Object.assign({}, state, {data: newData}, {symbolList: symbols}, {event: [action.payload.symbol, 'add']});
+    case DELETE_STOCK:
+      let oldSymbols = [...state.symbolList];
+      let currentData = [...state.data];
+      let newSymbolList = oldSymbols.filter(symbol => {
+        return symbol !== action.payload;
+      });
+      let changedData = currentData.filter(stock => {
+        return stock.symbol !== action.payload;
+      });
+      return Object.assign({}, state, {symbolList: newSymbolList}, {data: changedData}, {event: [action.payload, 'delete']});
+    case RESET_EVENT:
+      return Object.assign({}, state, {event: INITIAL_STATE.event});
     default:
       return state;
   }

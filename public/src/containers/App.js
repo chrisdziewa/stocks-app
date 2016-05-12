@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getStockData, addStock, getSavedStockSymbols } from '../actions';
+import {
+  addStock,
+  getSavedStockSymbols,
+  deleteStock
+} from '../actions';
 
 import StockInput from '../components/StockInput';
 import StockCard from '../components/StockCard';
@@ -22,6 +26,7 @@ class App extends Component {
           key={stock.symbol}
           symbol={stock.symbol}
           fullName={stock.fullName}
+          deleteStock={this.props.deleteStock.bind(this)}
         />
       )
     });
@@ -33,7 +38,7 @@ class App extends Component {
     return (
       <div className="app">
         <h1 className="logo">hiStocks</h1>
-        <div className="graph-container">
+        <div id="graph-container">
         </div>
         {
           this.props.stockData && this.props.stockData.length > 0 && this.props.stockData.length === this.props.symbolList.length ?
@@ -60,10 +65,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//
-//   }
-// }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addStock: bindActionCreators(addStock, dispatch),
+    getSavedStockSymbols: bindActionCreators(getSavedStockSymbols, dispatch),
+    deleteStock: bindActionCreators(deleteStock, dispatch)
+  }
+}
 
-export default connect(mapStateToProps, { getStockData, addStock, getSavedStockSymbols })(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

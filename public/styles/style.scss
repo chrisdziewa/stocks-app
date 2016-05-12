@@ -29,9 +29,24 @@ html {
   width: 100%;
   background: rgba(0,0,40, 1);
   color: white;
+  position: relative;
 
   p {
     margin: 5px auto;
     width: 90%;
+  }
+
+  .close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: rgba(230,230,230, .8);
+    background: none;
+    padding: 15px;
+    border-width: 0;
+
+    &:hover {
+      color: rgba(250,250,250,1);
+    }
   }
 }

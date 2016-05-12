@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const StockCard = (props) => {
-  return (
-    <div className="stock-card">
-      <p>{props.symbol}</p>
-      <p>{props.fullName}</p>
-    </div>
-  );
+class StockCard extends Component {
+
+  handleClick(e) {
+    e.preventDefault();
+    this.props.deleteStock(this.props.symbol);
+  }
+
+  render() {
+    let endString = this.props.fullName.indexOf(')');
+    let fullName = this.props.fullName.substr(0, endString + 1);
+    return (
+      <div className="stock-card">
+        <p>{this.props.symbol}</p>
+        <p>{fullName}</p>
+        <button
+          className="close"
+          onClick={this.handleClick.bind(this)}
+        >
+          X
+        </button>
+      </div>
+    );
+  }
 }
 
 export default StockCard;

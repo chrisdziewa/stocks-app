@@ -121,8 +121,26 @@ function stockAdded(data) {
   }
 }
 
-export function getLoadedMessage() {
+export function deleteStock(symbol) {
+  return dispatch => {
+    axios.delete(`${dbAPI}${symbol}`).then(response => {
+      dispatch(stockDeleted(symbol));
+    })
+    .catch(err => {
+      console.log('could not delete stock symbol: ' + symbol);
+    });
+  }
+}
+
+function stockDeleted(symbol) {
   return {
-    type: constants.APP_LOADED
+    type: constants.DELETE_STOCK,
+    payload: symbol
+  }
+}
+
+export function resetEvent() {
+  return {
+    type: constants.RESET_EVENT
   }
 }
