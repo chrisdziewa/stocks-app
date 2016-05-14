@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+
 if (isDevMode) {
   // Use Webpack Hot middleware in development
   (function () {
@@ -50,6 +51,13 @@ if (isDevMode) {
 // Mount routes here
 app.use('/api/stocks', routes.stocks);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log('App listening on port ' + PORT);
+});
+
+const io = require('socket.io')(server);
+
+// Socket.io
+io.on('connection', function(socket){
+  console.log('a user connected on server');
 });

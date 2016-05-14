@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import rootReducer from './reducers';
 import App from './containers/App';
+import SocketConnection from './socket';
 
 let store;
 
