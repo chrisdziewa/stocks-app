@@ -59,5 +59,22 @@ const io = require('socket.io')(server);
 
 // Socket.io
 io.on('connection', function(socket){
-  console.log('a user connected on server');
+  console.log("User connected with socket: " + socket.id);
+  socket.on('message', function(data) {
+    socket.broadcast.emit(data);
+  });
+
+  socket.on('action', (action) => {
+    if(action.type === 'server/ADD_STOCK'){
+      console.log('Called ADD_STOCK!', action.payload);
+      socket.broadcast.emit('action', {type:'ADD_STOCK', payload: action.payload});
+    }
+  });
+
+  socket.on('action', (action) => {
+    if(action.type === 'server/DELETE_STOCK'){
+      console.log('Called DELETE_STOCK!', action.payload);
+      socket.broadcast.emit('action', {type:'DELETE_STOCK', payload: action.payload});
+    }
+  });
 });

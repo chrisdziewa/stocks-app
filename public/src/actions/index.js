@@ -1,5 +1,6 @@
 // TODO: Fix date format for startDate in getDates function
 import * as constants from '../constants';
+import * as socketConstants from '../constants/sockets';
 import axios from 'axios';
 import config from '../../../app/config';
 
@@ -103,6 +104,7 @@ export function addStock(symbol) {
       axios.put(dbAPI, {symbol: symbol}).then(response => {
         // Symbol added to db
         dispatch(stockAdded(stockData));
+        dispatch(socketAddStock(stockData));
       })
       .catch(e => {
         console.log('Could not add symbol to DB');
@@ -125,6 +127,7 @@ export function deleteStock(symbol) {
   return dispatch => {
     axios.delete(`${dbAPI}${symbol}`).then(response => {
       dispatch(stockDeleted(symbol));
+      dispatch(socketDeleteStock(symbol));
     })
     .catch(err => {
       console.log('could not delete stock symbol: ' + symbol);
@@ -142,5 +145,21 @@ function stockDeleted(symbol) {
 export function resetEvent() {
   return {
     type: constants.RESET_EVENT
+  }
+}
+
+// Socket actions
+
+function socketAddStock(stock) {
+  return {
+    type: socketConstants.ADD_STOCK,
+    payload: stock
+  }
+}
+
+function socketDeleteStock(stock) {
+  return {
+    type: socketConstants.DELETE_STOCK,
+    payload: stock
   }
 }
