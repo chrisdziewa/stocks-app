@@ -6,14 +6,18 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import rootReducer from './reducers';
+import createSocketIoMiddleware from 'redux-socket.io';
 import App from './containers/App';
-import SocketConnection from './socket';
+import io from 'socket.io-client';
+
+const socket = io();
+const socketMiddleware = createSocketIoMiddleware(socket, "server/");
 
 let store;
 
 if (process.env.NODE_ENV !== 'production') {
   store = createStore(
-    rootReducer, applyMiddleware(thunk, logger())
+    rootReducer, applyMiddleware(thunk, socketMiddleware,logger())
   );
 
   module.hot.accept('./reducers', () => {
@@ -32,7 +36,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 else {
   store = createStore(
-    rootReducer, applyMiddleware(thunk)
+    rootReducer, applyMiddleware(thunk, socketMiddleware)
   );
 }
 
