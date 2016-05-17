@@ -3,7 +3,7 @@ import * as socketConstants from '../constants/sockets';
 import axios from 'axios';
 import config from '../../../app/config';
 
-const api_key = config.quandl.api_key || process.env.quandlKey;
+const api_key = config.quandl.api_key;
 const dbAPI = '/api/stocks/';
 
 // Sample quandl request
