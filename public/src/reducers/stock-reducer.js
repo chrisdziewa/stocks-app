@@ -15,7 +15,9 @@ export default function(state = INITIAL_STATE, action) {
       let savedSymbols = action.payload.map(stock => {
         return stock.symbol;
       });
-      return Object.assign({}, state, {symbolList: savedSymbols});
+
+      let data = action.payload;
+      return Object.assign({}, state, {symbolList: savedSymbols}, {data: data});
     case ADD_STOCK:
       let symbols = [...state.symbolList];
       let newData = [...state.data];

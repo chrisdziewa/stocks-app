@@ -11,51 +11,10 @@ const dbAPI = '/api/stocks/';
 
 let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
 
-
-// Formats start and end dates for Quandl api
-function getDates() {
-  let currentDate = new Date();
-  let formattedEndDate = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
-
-  let startDate = new Date(currentDate.setUTCFullYear(currentDate.getUTCFullYear() - 1));
-  let formattedStartDate = `${startDate.getUTCFullYear()}-${startDate.getUTCMonth() + 1}-${startDate.getUTCDate()}`;
-  return [formattedStartDate, formattedEndDate];
-}
-
-// Return data as pairs of unix timestamp and closing price for the day
-function formatStockData(data) {
-  let formattedData = data.map((dayInfo) => {
-    let formattedDate = new Date(dayInfo[0]).getTime();
-    return [formattedDate, dayInfo[4]];
-  });
-
-  return formattedData;
-}
-
-// export function getSavedStockSymbols() {
-//   return (dispatch) => {
-//     axios.get(dbAPI).then(response => {
-//       dispatch(getSavedStocks(response.data));
-//       response.data.forEach(stock => {
-//         dispatch(getStockData(stock.symbol));
-//       })
-//     })
-//     .catch(e => {
-//       console.log(e);
-//     });
-//   }
-// }
-//
-// function getSavedStocks(symbolList) {
-//   return {
-//     type: constants.GET_SAVED_STOCKS,
-//     payload: symbolList
-//   }
-// }
-
 export function getSavedStockSymbols() {
   return (dispatch) => {
     axios.get(dbAPI).then(response => {
+      console.log(response);
       dispatch(getSavedStocks(response.data));
     });
   }
@@ -65,36 +24,6 @@ function getSavedStocks(stocks) {
   return {
     type: constants.GET_SAVED_STOCKS,
     payload: stocks
-  }
-}
-//
-// export function getStockData(symbol) {
-//   let [ startDate, endDate ] = getDates();
-//
-//   let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
-//   return (dispatch) => {
-//     axios.get(fullApi).then(response => {
-//       let { dataset_code, name, data } = response.data.dataset;
-//
-//       let formattedData = formatStockData(data);
-//
-//       let stockData = {
-//         symbol: dataset_code,
-//         fullName: name,
-//         data: formattedData
-//       }
-//       dispatch(getSingleStock(stockData));
-//     })
-//     .catch(err => {
-//       console.log(`Could not find stock with symbol: ${symbol || undefined}`);
-//     })
-//   }
-// }
-
-function getSingleStock(data) {
-  return {
-    type: constants.GET_SINGLE_STOCK,
-    payload: data
   }
 }
 

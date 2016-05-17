@@ -9,7 +9,8 @@ const Stock = new Mongoose.Schema({
     type: String
   },
   currentDay: {
-    type: String
+    type: Date,
+    default: Date.now
   },
   data: {
     type: Array

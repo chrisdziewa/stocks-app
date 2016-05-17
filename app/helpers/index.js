@@ -51,6 +51,26 @@ function getSingleStockData(symbol) {
   });
 }
 
+function updateStock(symbol) {
+  return new Promise((resolve, reject) => {
+    getSingleStockData(symbol).then(response => {
+      db.stockModel.findAndModify({
+        symbol: symbol
+      }, {
+        symbol: symbol,
+        fullName: response.name,
+        data: response.data
+      }, { new: true }, (err, stock) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(stock);
+        }
+      });
+    });
+  });
+}
+
 module.exports = {
   getDates,
   formatStockData,

@@ -32,6 +32,15 @@ stockRouter.get('/', (req, res, next) => {
     if (err) {
       return res.status(500).send('Could not get stock symbols');
     } else {
+      stocks.map(stock => {
+        if (stock.currentDay.getUTCDate() !== new Date().getUTCDate()) {
+          h.updateStock(stock.symbol).then(response => {
+            return response;
+          });
+        } else {
+          return stock;
+        }
+      });
       return res.json(stocks);
     }
   });
