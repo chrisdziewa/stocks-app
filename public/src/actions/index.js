@@ -1,4 +1,3 @@
-// TODO: Fix date format for startDate in getDates function
 import * as constants from '../constants';
 import * as socketConstants from '../constants/sockets';
 import axios from 'axios';
