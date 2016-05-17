@@ -1,18 +1,28 @@
 'use strict';
 const db = require('../db');
+const h = require('../helpers');
 
 const stockRouter = require('express').Router();
 
 stockRouter.put('/', (req, res, next) => {
   let symbol = req.body.symbol.toUpperCase();
-  db.stockModel.update({
-    symbol: symbol
-  }, { $setOnInsert: { symbol: symbol } }, { upsert: true }, (err, symbols) => {
-    if (err) {
-      return res.status(500).send('There was an error retrieving stock symbols');
-    } else {
-      return res.send('Successfully added symbol ' + req.body.symbol + ' to the database');
-    }
+
+  h.getSingleStockData(symbol).then(response => {
+    // Add data to database here
+    db.stockModel.create({
+      symbol: symbol,
+      currentDay: new Date(),
+      data: response.data
+    }, { }, (err, data) => {
+      if (err) {
+        return res.status(500).send('There was an error retrieving stock symbols');
+      } else {
+        return res.json(data);
+      }
+    });
+  })
+  .catch(err => {
+    console.log(err);
   });
 });
 

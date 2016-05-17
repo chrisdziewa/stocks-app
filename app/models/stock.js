@@ -4,6 +4,12 @@ const Stock = new Mongoose.Schema({
   symbol: {
     type: String,
     unique: true
+  },
+  currentDay: {
+    type: String
+  },
+  data: {
+    type: Array
   }
 });
 

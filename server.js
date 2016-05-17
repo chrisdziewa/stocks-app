@@ -66,14 +66,14 @@ io.on('connection', function(socket){
 
   socket.on('action', (action) => {
     if(action.type === 'server/ADD_STOCK'){
-      console.log('Called ADD_STOCK!', action.payload);
+      console.log('Called ADD_STOCK!');
       socket.broadcast.emit('action', {type:'ADD_STOCK', payload: action.payload});
     }
   });
 
   socket.on('action', (action) => {
     if(action.type === 'server/DELETE_STOCK'){
-      console.log('Called DELETE_STOCK!', action.payload);
+      console.log('Called DELETE_STOCK!');
       socket.broadcast.emit('action', {type:'DELETE_STOCK', payload: action.payload});
     }
   });
