@@ -12,8 +12,9 @@ stockRouter.put('/', (req, res, next) => {
     db.stockModel.create({
       symbol: symbol,
       currentDay: new Date(),
+      fullName: response.fullName,
       data: response.data
-    }, { }, (err, data) => {
+    }, (err, data) => {
       if (err) {
         return res.status(500).send('There was an error retrieving stock symbols');
       } else {
@@ -27,11 +28,11 @@ stockRouter.put('/', (req, res, next) => {
 });
 
 stockRouter.get('/', (req, res, next) => {
-  db.stockModel.find({}, (err, symbols) => {
+  db.stockModel.find({}, (err, stocks) => {
     if (err) {
       return res.status(500).send('Could not get stock symbols');
     } else {
-      return res.json(symbols);
+      return res.json(stocks);
     }
   });
 });

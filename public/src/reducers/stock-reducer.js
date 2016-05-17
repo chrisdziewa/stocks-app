@@ -16,10 +16,6 @@ export default function(state = INITIAL_STATE, action) {
         return stock.symbol;
       });
       return Object.assign({}, state, {symbolList: savedSymbols});
-    case GET_SINGLE_STOCK:
-      let currentStocks = [...state.data];
-      currentStocks.push(action.payload);
-      return Object.assign({}, state, {data: currentStocks});
     case ADD_STOCK:
       let symbols = [...state.symbolList];
       let newData = [...state.data];

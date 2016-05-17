@@ -32,49 +32,64 @@ function formatStockData(data) {
   return formattedData;
 }
 
+// export function getSavedStockSymbols() {
+//   return (dispatch) => {
+//     axios.get(dbAPI).then(response => {
+//       dispatch(getSavedStocks(response.data));
+//       response.data.forEach(stock => {
+//         dispatch(getStockData(stock.symbol));
+//       })
+//     })
+//     .catch(e => {
+//       console.log(e);
+//     });
+//   }
+// }
+//
+// function getSavedStocks(symbolList) {
+//   return {
+//     type: constants.GET_SAVED_STOCKS,
+//     payload: symbolList
+//   }
+// }
+
 export function getSavedStockSymbols() {
   return (dispatch) => {
     axios.get(dbAPI).then(response => {
       dispatch(getSavedStocks(response.data));
-      response.data.forEach(stock => {
-        dispatch(getStockData(stock.symbol));
-      })
-    })
-    .catch(e => {
-      console.log(e);
     });
   }
 }
 
-function getSavedStocks(symbolList) {
+function getSavedStocks(stocks) {
   return {
     type: constants.GET_SAVED_STOCKS,
-    payload: symbolList
+    payload: stocks
   }
 }
-
-export function getStockData(symbol) {
-  let [ startDate, endDate ] = getDates();
-
-  let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
-  return (dispatch) => {
-    axios.get(fullApi).then(response => {
-      let { dataset_code, name, data } = response.data.dataset;
-
-      let formattedData = formatStockData(data);
-
-      let stockData = {
-        symbol: dataset_code,
-        fullName: name,
-        data: formattedData
-      }
-      dispatch(getSingleStock(stockData));
-    })
-    .catch(err => {
-      console.log(`Could not find stock with symbol: ${symbol || undefined}`);
-    })
-  }
-}
+//
+// export function getStockData(symbol) {
+//   let [ startDate, endDate ] = getDates();
+//
+//   let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
+//   return (dispatch) => {
+//     axios.get(fullApi).then(response => {
+//       let { dataset_code, name, data } = response.data.dataset;
+//
+//       let formattedData = formatStockData(data);
+//
+//       let stockData = {
+//         symbol: dataset_code,
+//         fullName: name,
+//         data: formattedData
+//       }
+//       dispatch(getSingleStock(stockData));
+//     })
+//     .catch(err => {
+//       console.log(`Could not find stock with symbol: ${symbol || undefined}`);
+//     })
+//   }
+// }
 
 function getSingleStock(data) {
   return {
@@ -83,31 +98,21 @@ function getSingleStock(data) {
   }
 }
 
-export function addStock(symbol) {
-  let [ startDate, endDate ] = getDates();
+export function addStock(ticker) {
 
-  let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
   return (dispatch) => {
-    axios.get(fullApi).then(response => {
+    axios.put(dbAPI, { symbol: ticker }).then(response => {
       // Date is index 0, Closing price is index 4 in data array
-      let { dataset_code, name, data } = response.data.dataset;
-
-      let formattedData = formatStockData(data);
-
+      let { symbol, fullName, data } = response.data;
 
       let stockData = {
-        symbol: dataset_code,
-        fullName: name,
-        data: formattedData
+        symbol: symbol,
+        fullName: fullName,
+        data: data
       }
-      axios.put(dbAPI, {symbol: symbol}).then(response => {
-        // Symbol added to db
-        dispatch(stockAdded(stockData));
-        dispatch(socketAddStock(stockData));
-      })
-      .catch(e => {
-        console.log('Could not add symbol to DB');
-      });
+
+      dispatch(stockAdded(stockData));
+      dispatch(socketAddStock(stockData));
     })
     .catch(err => {
       console.log(`Could not add stock with symbol: ${symbol || undefined}`);

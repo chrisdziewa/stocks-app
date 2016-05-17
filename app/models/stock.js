@@ -5,6 +5,9 @@ const Stock = new Mongoose.Schema({
     type: String,
     unique: true
   },
+  fullName: {
+    type: String
+  },
   currentDay: {
     type: String
   },
