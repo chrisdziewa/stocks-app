@@ -1,9 +1,9 @@
 import * as constants from '../constants';
 import * as socketConstants from '../constants/sockets';
 import axios from 'axios';
-import config from '/app/config';
+import config from '../../../app/config';
 
-const api_key = config.quandl.api_key;
+const api_key = config.quandl.api_key || process.env.quandlKey;
 const dbAPI = '/api/stocks/';
 
 // Sample quandl request
