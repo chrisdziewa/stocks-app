@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'production') {
     host: process.env.host || "",
     dbURI: `mongodb://${process.env.dbUser}:${process.env.dbPassword}@ds023902.mlab.com:23902/stocks-app`,
     quandl: {
-      api_key: process.env.apiKey
+      api_key: process.env.quandlKey
     }
   }
 } else {
