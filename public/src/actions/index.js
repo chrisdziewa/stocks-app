@@ -14,7 +14,6 @@ let quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
 export function getSavedStockSymbols() {
   return (dispatch) => {
     axios.get(dbAPI).then(response => {
-      console.log(response);
       dispatch(getSavedStocks(response.data));
     });
   }
