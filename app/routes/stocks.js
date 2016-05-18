@@ -23,7 +23,7 @@ stockRouter.put('/', (req, res, next) => {
     });
   })
   .catch(err => {
-    console.log(err);
+    res.status(404).send('Stock symbol not found');
   });
 });
 

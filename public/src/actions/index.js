@@ -43,7 +43,7 @@ export function addStock(ticker) {
       dispatch(socketAddStock(stockData));
     })
     .catch(err => {
-      console.log(`Could not add stock with symbol: ${symbol || undefined}`);
+      console.log(`Could not add stock with symbol: ${ticker || undefined}`);
     });
   }
 }
