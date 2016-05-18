@@ -74,5 +74,6 @@ function updateStock(symbol) {
 module.exports = {
   getDates,
   formatStockData,
-  getSingleStockData
+  getSingleStockData,
+  updateStock
 }
