@@ -115,7 +115,8 @@ class Graph extends Component {
 
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
+    this.chart = null;
   }
 
   render() {

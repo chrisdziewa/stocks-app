@@ -7,11 +7,10 @@ const quandlApi = `https://www.quandl.com/api/v3/datasets/WIKI/`;
 // Formats start and end dates for Quandl api
 function getDates() {
   let currentDate = new Date();
-  let formattedEndDate = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
 
   let startDate = new Date(currentDate.setUTCFullYear(currentDate.getUTCFullYear() - 1));
   let formattedStartDate = `${startDate.getUTCFullYear()}-${startDate.getUTCMonth() + 1}-${startDate.getUTCDate()}`;
-  return [formattedStartDate, formattedEndDate];
+  return formattedStartDate;
 }
 
 // Return data as pairs of unix timestamp and closing price for the day
@@ -25,11 +24,9 @@ function formatStockData(data) {
 }
 
 function getSingleStockData(symbol) {
-  let dates = getDates();
-  let startDate = dates[0];
-  let endDate = dates[1];
+  let startDate = getDates();
 
-  let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&end_date=${endDate}&order=asc&api_key=${api_key}`;
+  let fullApi = `${quandlApi}${symbol}.json?start_date=${startDate}&order=asc&api_key=${api_key}`;
   return new Promise((resolve, reject) => {
     axios.get(fullApi).then(response => {
       // let { dataset_code, name, data } = response.data.dataset;

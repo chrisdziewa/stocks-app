@@ -43,7 +43,7 @@ class App extends Component {
         {
           this.props.stockData && this.props.stockData.length > 0 && this.props.stockData.length === this.props.symbolList.length ?
             <Graph stockData={this.props.stockData}/>
-          : null
+          : <div>Not currently tracking any stocks</div>
         }
         <StockInput
           addStock={this.props.addStock.bind(this)}
