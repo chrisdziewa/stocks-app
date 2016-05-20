@@ -15,6 +15,8 @@ export function getSavedStockSymbols() {
   return (dispatch) => {
     axios.get(dbAPI).then(response => {
       dispatch(getSavedStocks(response.data));
+    }, err => {
+      console.log('Could not get saved stocks');
     });
   }
 }
@@ -41,9 +43,9 @@ export function addStock(ticker) {
 
       dispatch(stockAdded(stockData));
       dispatch(socketAddStock(stockData));
-    })
-    .catch(err => {
-      console.log(`Could not add stock with symbol: ${ticker || undefined}`);
+      dispatch(removeErrorMessage());
+    }, err => {
+      dispatch(setErrorMessage(`Could not add stock with symbol: ${ticker.toUpperCase() || undefined}`));
     });
   }
 }
@@ -62,7 +64,7 @@ export function deleteStock(symbol) {
       dispatch(socketDeleteStock(symbol));
     })
     .catch(err => {
-      console.log('could not delete stock symbol: ' + symbol);
+      dispatch(setErrorMessage('could not delete stock symbol: ' + symbol));
     });
   }
 }
@@ -95,3 +97,17 @@ function socketDeleteStock(stock) {
     payload: stock
   }
 }
+
+export function setErrorMessage(message) {
+  return {
+    type: constants.ERROR_MESSAGE,
+    payload: message
+  }
+}
+
+export function removeErrorMessage() {
+  return {
+    type: constants.REMOVE_ERROR
+  }
+}
+

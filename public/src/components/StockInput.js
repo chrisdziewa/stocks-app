@@ -12,14 +12,14 @@ class StockInput extends Component {
   handleSubmit(e) {
     e.preventDefault();
     let { text } = this.state
-    if (this.props.currentSymbols.indexOf(text) === -1 &&
+    if (text !== '' && this.props.currentSymbols.indexOf(text.toUpperCase()) === -1 && 
           text.length > 0) {
       this.props.addStock(text);
       this.setState({
         text: ''
       });
     } else {
-      console.log('Already tracking this stock');
+      this.props.setErrorMessage('Already tracking this stock');
     }
   }
 
@@ -30,24 +30,42 @@ class StockInput extends Component {
     });
   }
 
+  clearError() {
+    this.props.removeErrorMessage();
+  }
+
   render() {
     return (
-      <form
-        onSubmit={this.handleSubmit.bind(this)}
-      >
-        <input
-          onChange={this.updateInput.bind(this)}
-          value={this.state.text}
-          type="text"
-          placeholder="Stock code"
-        />
-        <button
-          type="submit"
-          className="btn-add"
-        >
-          Add
-        </button>
-      </form>
+     <div> 
+       <form
+             onSubmit={this.handleSubmit.bind(this)}
+           >
+             <input
+               onChange={this.updateInput.bind(this)}
+               value={this.state.text}
+               type="text"
+               placeholder="Stock code"
+             />
+             <button
+               type="submit"
+               className="btn-add"
+             >
+               Add
+             </button>
+           </form>
+           <p className="error-text">{ this.props.error } 
+            {
+              this.props.error !== '' ? 
+              <button 
+                className="close-error"
+                onClick={this.clearError.bind(this)}
+                >
+                  X
+                  </button>
+              : null
+            }
+           </p>
+      </div>  
     );
   }
 }

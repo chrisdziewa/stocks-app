@@ -88,6 +88,23 @@ form {
   }
 }
 
+.error-text {
+    color: rgba(200, 0, 0, 1);
+}
+
+.close-error {
+  background: none;
+  outline: 0;
+  padding: 15px;
+  margin-left: 2px;
+  border: none;
+  font-size: 1.3rem;
+  color: rgba(220, 200, 200, 1);
+  &:hover {
+    color: rgba(100, 80, 80, 1);
+  }
+}
+
 // Media Queries
 
 @media screen and (min-width: 670px) {

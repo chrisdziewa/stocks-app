@@ -4,7 +4,9 @@ import { bindActionCreators } from 'redux';
 import {
   addStock,
   getSavedStockSymbols,
-  deleteStock
+  deleteStock,
+  setErrorMessage,
+  removeErrorMessage
 } from '../actions';
 
 import StockInput from '../components/StockInput';
@@ -48,6 +50,9 @@ class App extends Component {
         <StockInput
           addStock={this.props.addStock.bind(this)}
           currentSymbols={this.props.symbolList}
+          error={this.props.errorMessage}
+          setErrorMessage={this.props.setErrorMessage.bind(this)}
+          removeErrorMessage={this.props.removeErrorMessage.bind(this)}
         />
         <div className="current-stocks">
           {this.renderStockCards()}
@@ -61,7 +66,8 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     symbolList: state.stocks.symbolList,
-    stockData: state.stocks.data
+    stockData: state.stocks.data,
+    errorMessage: state.message.text
   }
 }
 
@@ -69,7 +75,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addStock: bindActionCreators(addStock, dispatch),
     getSavedStockSymbols: bindActionCreators(getSavedStockSymbols, dispatch),
-    deleteStock: bindActionCreators(deleteStock, dispatch)
+    deleteStock: bindActionCreators(deleteStock, dispatch),
+    setErrorMessage: bindActionCreators(setErrorMessage, dispatch),
+    removeErrorMessage: bindActionCreators(removeErrorMessage, dispatch)
+
   }
 }
 
